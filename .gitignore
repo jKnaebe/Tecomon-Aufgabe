@@ -22,13 +22,10 @@ Thumbs.db
 # Optional: Cache-Ordner
 cache/
 
-# Build-Ordner (falls Frontend mit Vite/React)
+# Build-Ordner
 dist/
 build/
 
 # IDE-spezifisch (VSCode)
 .vscode/
 .idea/
-
-# MongoDB-Daten (lokal, nur wenn du lokale DB verwendest)
-data/
