@@ -19,5 +19,17 @@ async function getWeather(city) {
         city,
         temperature: response.data.current.temperature_2m,
         rain: response.data.current.rain
-    }
+    };
+
+    await weatherData.findOneAndUpdate(
+        {city: data.city},
+        data,
+        {upset: true}
+    );
+
+    cache[city] = {data, timestamp: Date.now()};
+    
+    return data;
 }
+
+module.exports = {getWeather};
