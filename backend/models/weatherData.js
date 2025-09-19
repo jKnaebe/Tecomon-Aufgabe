@@ -1,10 +1,28 @@
 const mongoose = require('mongoose');
 
-const weatherSchema = new mongoose.Schema ({
-    city: {type: String, require: true},
-    temperature: Number,
-    rain: Number,
-    updateedAt: { type: Date, default: Date.now }
+const weatherDataSchema = new mongoose.Schema({
+    city: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    temperature: {
+        type: Number,
+        required: true
+    },
+    windspeed: {
+        type: Number,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-module.exports = mongoose.model('weatherData', weatherSchema);
+weatherDataSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
+    next();
+});
+
+module.exports = mongoose.model('WeatherData', weatherDataSchema);
