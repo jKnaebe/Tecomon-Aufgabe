@@ -19,9 +19,6 @@ logs/
 .DS_Store
 Thumbs.db
 
-# Optional: Cache-Ordner
-cache/
-
 # Build-Ordner
 dist/
 build/
