@@ -4,7 +4,6 @@ const weatherDataSchema = new mongoose.Schema({
     city: {
         type: String,
         required: true,
-        unique: true,
         trim: true
     },
     temperature: {

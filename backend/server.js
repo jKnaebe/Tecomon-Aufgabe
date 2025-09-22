@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const weatherRoutes = require('./routes/weatherRoutes');
+const widgetRoutes = require('./routes/widget');
 
 const app = express();
 app.use(cors());
@@ -13,11 +13,9 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Datenbank verbunden'))
   .catch(err => console.error('Verbindungsfehler:', err));
 
-// Test-Route
 app.get('/', (req, res) => res.send('Backend läuft'));
 
-// Wetter-Routes
-app.use('/api/weather', weatherRoutes);
+app.use('/api/widgets', widgetRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server läuft auf Port: ${PORT}`));

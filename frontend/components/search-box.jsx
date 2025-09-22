@@ -1,5 +1,4 @@
-// frontend/components/SearchBox.jsx
-import styles from './SearchBox.module.css';
+import styles from './search-box.module.css';
 
 export default function SearchBox({ value, onChange, onSubmit }) {
   return (

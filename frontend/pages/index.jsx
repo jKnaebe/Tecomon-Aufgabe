@@ -1,67 +1,77 @@
-// frontend/pages/index.jsx
-import { useEffect, useState } from 'react';
-import SearchBox from '../components/SearchBox';
-import Card from '../components/Card';
+import { useState, useEffect } from 'react';
 import { fetchWidgets, addWidget, deleteWidget } from '../utils/api';
-import styles from '../styles/Dashboard.module.css';
+import Card from '../components/card';
+import SearchBox from '../components/search-box';
 
 export default function Dashboard() {
-  const [city, setCity] = useState('');
   const [widgets, setWidgets] = useState([]);
+  const [city, setCity] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Widgets beim Laden holen
+  // Widgets beim Laden der Seite vom Backend holen
   useEffect(() => {
     loadWidgets();
   }, []);
 
   const loadWidgets = async () => {
-    setLoading(true);
     try {
       const data = await fetchWidgets();
       setWidgets(data);
     } catch (err) {
+      console.error(err);
       setError('Fehler beim Laden der Widgets');
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Neue Stadt hinzufügen
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!city) return;
     setLoading(true);
     setError('');
+
     try {
-      const newWidget = await addWidget(city);
-      setWidgets(prev => [...prev, newWidget]);
+      await addWidget(city);    // POST an Backend
+      await loadWidgets();      // Widgets vom Backend neu laden
+      setCity('');              // Input leeren
     } catch (err) {
       setError(err.response?.data?.error || 'Fehler beim Hinzufügen der Stadt');
     } finally {
-      setCity('');
       setLoading(false);
     }
   };
 
-  const handleDelete = async (id) => {
+  // Widget löschen
+  const handleRemove = async (id) => {
     try {
       await deleteWidget(id);
       setWidgets(prev => prev.filter(w => w._id !== id));
     } catch (err) {
       console.error(err);
+      setError('Fehler beim Löschen der Stadt');
     }
   };
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <h1>Wetter Dashboard</h1>
-      <SearchBox value={city} onChange={setCity} onSubmit={handleSearch} />
-      {loading && <p>Lade Daten...</p>}
-      {error && <p className={styles.error}>{error}</p>}
-      <div className={styles.cards}>
+
+      <SearchBox
+        value={city}
+        onChange={setCity}
+        onSubmit={handleSearch}
+      />
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginTop: '1rem' }}>
         {widgets.map(widget => (
-          <Card key={widget._id} weather={widget.weather} onRemove={() => handleDelete(widget._id)} />
+          <Card
+            key={widget._id}
+            weather={widget}
+            onRemove={() => handleRemove(widget._id)}
+          />
         ))}
       </div>
     </div>

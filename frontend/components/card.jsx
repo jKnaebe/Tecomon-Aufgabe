@@ -1,6 +1,5 @@
-// frontend/components/Card.jsx
-import styles from './Card.module.css';
-import { formatDate } from '../utils/formatDate';
+import styles from './card.module.css';
+import { formatDate } from '../utils/format-date';
 
 export default function Card({ weather, onRemove }) {
   if (!weather) return null;

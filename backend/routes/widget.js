@@ -18,29 +18,46 @@ router.get('/', async (req, res, next) => {
     );
     res.json(withWeather);
   } catch (err) {
+    console.error('Fehler in GET /api/widgets:', err);
     next(err);
   }
 });
 
+// POST /api/widgets → neue Stadt hinzufügen oder bestehende aktualisieren
 router.post('/', async (req, res, next) => {
   try {
     const { city } = req.body;
     if (!city) return res.status(400).json({ error: 'city benötigt' });
 
-    const widget = new Widget({ city });
-    await widget.save();
+    // Wetterdaten holen
+    const weatherData = await getWeather(city);
+
+    // Upsert: Stadt existiert → aktualisieren, sonst neu erstellen
+    const widget = await Widget.findOneAndUpdate(
+      { city: weatherData.city },
+      {
+        temperature: weatherData.temperature,
+        windspeed: weatherData.windspeed,
+        updatedAt: Date.now()
+      },
+      { upsert: true, new: true } // erstellt neues Dokument, falls nicht vorhanden
+    );
+
     res.status(201).json(widget);
   } catch (err) {
-    next(err);
+    console.error('Fehler in POST /api/widgets:', err);
+    res.status(500).json({ error: 'Fehler beim Hinzufügen oder Aktualisieren der Stadt' });
   }
 });
 
+// DELETE /api/widgets/:id → Widget löschen
 router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     await Widget.findByIdAndDelete(id);
     res.status(204).end();
   } catch (err) {
+    console.error('Fehler in DELETE /api/widgets/:id:', err);
     next(err);
   }
 });
