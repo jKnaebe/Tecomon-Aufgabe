@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Card from './card';
 import SearchBox from './search-box';
 import { fetchWeather } from '../utils/api';
-import '../styles/dashboard.css';
+import styles from '../styles/dashboard.module.css';
 
 export default function Dashboard() {
   const [city, setCity] = useState('');

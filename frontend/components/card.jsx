@@ -1,5 +1,5 @@
-import '../styles/card.css';
-import { formatDate } from '../utils/formatDate';
+import styles from '../styles/card.module.css';
+import { formatDate } from '../utils/format-date';
 
 export default function Card({ weather, onRemove }) {
   if (!weather) return null;

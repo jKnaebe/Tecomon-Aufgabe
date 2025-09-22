@@ -1,4 +1,4 @@
-import '../styles/search-box.css';
+import styles from '../styles/search-box.module.css';
 
 export default function SearchBox({ value, onChange, onSubmit }) {
   return (
