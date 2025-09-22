@@ -1,16 +1,17 @@
-import styles from '../styles/card.module.css';
-import { formatDate } from '../utils/format-date';
+// frontend/components/Card.jsx
+import styles from './Card.module.css';
+import { formatDate } from '../utils/formatDate';
 
 export default function Card({ weather, onRemove }) {
   if (!weather) return null;
 
   return (
-    <div className="card">
+    <div className={styles.card}>
       <p><strong>Stadt:</strong> {weather.city}</p>
       <p><strong>Temperatur:</strong> {weather.temperature}°C</p>
-      <p><strong>Zustand:</strong> {weather.condition}</p>
+      <p><strong>Wind:</strong> {weather.windspeed} km/h</p>
       <p><strong>Aktualisiert:</strong> {formatDate(weather.updatedAt)}</p>
-      {onRemove && <button onClick={onRemove}>Entfernen</button>}
+      <button onClick={onRemove}>Löschen</button>
     </div>
   );
 }
