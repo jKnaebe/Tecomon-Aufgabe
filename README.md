@@ -16,7 +16,7 @@ Dieses Projekt besteht aus einem **Fullstack-Wetter-Widget-System** mit **Fronte
 ### Voraussetzungen:
 
 - Node.js (v18+ empfohlen)
-- MongoDB (lokal oder über MongoDB Atlas)
+- MongoDB (Projekt wurde über MongoDB Atlas erstellt)
 - NPM
 
 ### 1. Repository klonen
