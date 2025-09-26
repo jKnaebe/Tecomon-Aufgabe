@@ -76,6 +76,8 @@ npm run dev
 http://localhost:5000/api/widgets
 ```
 
+---
+
 ### GET /api/widgets
 
 Gibt eine Liste aller gespeicherten Städte (Widgets) zurück, inklusive aktueller Wetterdaten.
@@ -98,6 +100,8 @@ Gibt eine Liste aller gespeicherten Städte (Widgets) zurück, inklusive aktuell
   }
 ]
 ```
+
+---
 
 ### POST /api/widgets
 
@@ -131,6 +135,8 @@ Fehler (400 Bad Request), wenn keine city angegeben wurde:
   "error": "city benötigt"
 }
 ```
+
+---
 
 ### DELETE /api/widgets/:id
 
