@@ -47,6 +47,8 @@ PORT=5000
 MONGODB_URI=mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER_URL>/<DATABASE_NAME>?retryWrites=true&w=majority&appName=<APP_NAME>
 ```
 
+> 💡 Das Backend sollte unter `http://localhost:5000` erreichbar sein
+
 ---
 
 ### 3. Frontend starten
@@ -63,7 +65,6 @@ npm run dev
 ```
 
 > 💡 Standardmäßig läuft das Frontend unter `http://localhost:3000`  
-> 💡 Das Backend sollte unter `http://localhost:5000` erreichbar sein
 
 ---
 
