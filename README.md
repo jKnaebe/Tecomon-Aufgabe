@@ -150,8 +150,8 @@ DELETE /api/widgets/651f2c7a91a43c8b0e8d0f21
 
 **Response:**
 
-- 204 No Content, bei Erfolg
-- 500 Internal Server Error, falls etwas schiefgeht
+- **204 No Content**, bei Erfolg
+- **500 Internal Server Error**, falls etwas schiefgeht
 
 ---
 
