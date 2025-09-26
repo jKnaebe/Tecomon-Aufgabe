@@ -1,30 +1,33 @@
-## 📦 Projektstruktur (Vorschlag)
+## 🌍 Projektübersicht
 
-```txt
-/project-root
-├── frontend/         → Next.js Frontend (Dashboard)
-│   ├── pages/
-│   ├── components/
-│   └── utils/
-├── backend/          → Node.js Backend (Express oder Fastify)
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
-│   ├── services/     → Wetterdaten-Logik inkl. Caching
-│   └── cache/        → optional: In-Memory oder File-basierter Cache
-└── README.md
-```
+Dieses Projekt besteht aus einem **Fullstack-Wetter-Widget-System** mit **Frontend und Backend**.
+
+- Das **Backend** ist mit **Node.js**, **Express** und **MongoDB (Mongoose)** umgesetzt.  
+  Es ruft aktuelle Wetterdaten (Temperatur & Windgeschwindigkeit) über die **[Open-Meteo API](https://open-meteo.com/)** ab, speichert diese in einer Datenbank und stellt sie über eine **REST API** bereit.  
+  Zudem werden die Daten für 5 Minuten gecached, um unnötige API-Anfragen zu vermeiden.
+
+- Das **Frontend** ist mit **React (Next.js)** gebaut und kommuniziert über HTTP-Anfragen mit dem Backend.  
+  Es ermöglicht das **Hinzufügen und Löschen von Städten** sowie die **Anzeige der aktuellen Wetterinformationen** in einer benutzerfreundlichen Oberfläche.
 
 ---
 
 ## 🚀 Setup-Anleitung
 
 ### Voraussetzungen:
+
 - Node.js (v18+ empfohlen)
 - MongoDB (lokal oder über MongoDB Atlas)
-- NPM oder Yarn
+- NPM
 
-### 1. Backend starten
+### 1. Repository klonen
+
+```bash
+# Repository klonen
+git clone <REPO_URL>
+cd <REPO_NAME>
+```
+
+### 2. Backend starten
 
 ```bash
 # Ins Backend wechseln
@@ -37,15 +40,16 @@ npm install
 npm run dev
 ```
 
-> 💡 Beispiel `.env`-Datei:
+> 💡 Die App benötigt eine .env Datei im Projektverzeichnis. Beispiel `.env`-Datei:
+
 ```env
-MONGODB_URI=mongodb://localhost:27017/widgets
 PORT=5000
+MONGODB_URI=mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER_URL>/<DATABASE_NAME>?retryWrites=true&w=majority&appName=<APP_NAME>
 ```
 
 ---
 
-### 2. Frontend starten
+### 3. Frontend starten
 
 ```bash
 # Ins Frontend wechseln
@@ -63,61 +67,100 @@ npm run dev
 
 ---
 
-## 🔍 Funktionale Anforderungen
+## 📡 API-Beschreibung
 
-### 🔹 Dashboard (Frontend)
-- Benutzer kann mehrere Widgets erstellen, z. B. für:
-  - Wetter in Berlin
-  - Wetter in Hamburg
-  - Wetter in Paris
-- Jedes Widget zeigt live die Wetterdaten für den gewählten Ort
-- Widgets können gelöscht werden
-- Keine Authentifizierung notwendig
+### Basis-URL
 
-### 🔹 Backend (API + MongoDB)
-- API zum Erstellen, Abrufen und Löschen von Widgets
-- MongoDB speichert:
-  - Widget-Daten (`_id`, `location`, `createdAt`)
-  - (Optional: Benutzer-ID, falls später Auth hinzukommt)
+```bash
+http://localhost:5000/api/widgets
+```
 
-### 🔹 Wetterdaten-Handling
-- Wetterdaten werden bei Bedarf vom Backend über einen externen Wetterdienst abgerufen (z. B. open-meteo oder OpenWeather)
-- Wenn für eine Stadt in den letzten **5 Minuten** bereits ein Abruf erfolgte, wird der **cached** Wert zurückgegeben (Memory oder einfache Cache-Datei)
+### GET /api/widgets
+
+Gibt eine Liste aller gespeicherten Städte (Widgets) zurück, inklusive aktueller Wetterdaten.
+
+**ResponsResponse-Beispiel (200 OK):**
+
+```json
+[
+  {
+    "_id": "651f2c7a91a43c8b0e8d0f21",
+    "city": "Berlin",
+    "temperature": 18.5,
+    "windspeed": 12.3,
+    "updatedAt": "2024-09-23T10:15:30.123Z",
+    "weather": {
+      "city": "Berlin",
+      "temperature": 18.5,
+      "windspeed": 12.3
+    }
+  }
+]
+```
+
+### POST /api/widgets
+
+Fügt eine neue Stadt hinzu oder aktualisiert sie, falls sie schon existiert.
+
+**Request-Body:**
+
+```json
+{
+  "city": "Berlin"
+}
+```
+
+**Response-Beispiel (201 Created):**
+
+```json
+{
+  "_id": "651f2c7a91a43c8b0e8d0f21",
+  "city": "Berlin",
+  "temperature": 18.5,
+  "windspeed": 12.3,
+  "updatedAt": "2024-09-23T10:15:30.123Z",
+  "__v": 0
+}
+```
+
+Fehler (400 Bad Request), wenn keine city angegeben wurde:
+
+```json
+{
+  "error": "city benötigt"
+}
+```
+
+### DELETE /api/widgets/:id
+
+Löscht ein Widget anhand seiner MongoDB-ID.
+
+**Beispiel:**
+
+```bash
+DELETE /api/widgets/651f2c7a91a43c8b0e8d0f21
+```
+
+**Response:**
+
+- 204 No Content, bei Erfolg
+- 500 Internal Server Error, falls etwas schiefgeht
 
 ---
 
-## 🧾 API-Vorschlag
+## 📦 Projektstruktur
 
-| Methode | Endpoint                 | Beschreibung                       |
-|---------|--------------------------|------------------------------------|
-| GET     | `/widgets`               | Liste aller gespeicherten Widgets |
-| POST    | `/widgets`               | Neues Widget erstellen (`location`) |
-| DELETE  | `/widgets/:id`           | Widget löschen                     |
-
----
-
-## ☁️ Wetterdaten-API
-
-Kostenlose APIs zur Auswahl:
-
-- [https://open-meteo.com/](https://open-meteo.com/) (kein API-Key nötig)
-- [https://openweathermap.org/api](https://openweathermap.org/api) (kostenlos, mit Key)
-
----
-
-## 🧪 Ziel des Projekts
-
-- Verständnis für API-Design, Next.js-Frontend und Microservice-Architektur
-- Umgang mit externen APIs und Caching
-- MongoDB-Datenmodellierung
-- Trennung von Backend-Logik und Frontend-Komponenten
-- saubere Code-Struktur, Modularität und Dokumentation
-
----
-
-## 📄 Was soll eingereicht werden?
-
-- `README.md` mit:
-  - Setup-Anleitung
-  - API-Beschreibung
-  - Kurzer Architekturüberblick (z. B. mit Text oder Diagramm)
+```txt
+/project-root
+├── backend/          → Node.js, Express, MongoDB (Mongoose)
+│   ├── models/
+│   ├── routes/
+│   ├── services/     → Wetterdaten-Logik inkl. Caching
+│   └── server.js
+├── frontend/         → React (Next.js)
+│   ├── components/
+│   ├── pages/
+│   ├── styles/
+│   └── utils/
+└── README.md
+```

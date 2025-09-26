@@ -9,7 +9,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Widgets beim Laden der Seite vom Backend holen
   useEffect(() => {
     loadWidgets();
   }, []);
@@ -24,7 +23,6 @@ export default function Dashboard() {
     }
   };
 
-  // Neue Stadt hinzufügen
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!city) return;
@@ -32,9 +30,9 @@ export default function Dashboard() {
     setError('');
 
     try {
-      await addWidget(city);    // POST an Backend
-      await loadWidgets();      // Widgets vom Backend neu laden
-      setCity('');              // Input leeren
+      await addWidget(city);
+      await loadWidgets();
+      setCity('');
     } catch (err) {
       setError(err.response?.data?.error || 'Fehler beim Hinzufügen der Stadt');
     } finally {
@@ -42,7 +40,6 @@ export default function Dashboard() {
     }
   };
 
-  // Widget löschen
   const handleRemove = async (id) => {
     try {
       await deleteWidget(id);

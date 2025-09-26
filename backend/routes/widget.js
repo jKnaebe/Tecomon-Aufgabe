@@ -23,16 +23,13 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// POST /api/widgets → neue Stadt hinzufügen oder bestehende aktualisieren
 router.post('/', async (req, res, next) => {
   try {
     const { city } = req.body;
     if (!city) return res.status(400).json({ error: 'city benötigt' });
 
-    // Wetterdaten holen
     const weatherData = await getWeather(city);
 
-    // Upsert: Stadt existiert → aktualisieren, sonst neu erstellen
     const widget = await Widget.findOneAndUpdate(
       { city: weatherData.city },
       {
@@ -40,7 +37,7 @@ router.post('/', async (req, res, next) => {
         windspeed: weatherData.windspeed,
         updatedAt: Date.now()
       },
-      { upsert: true, new: true } // erstellt neues Dokument, falls nicht vorhanden
+      { upsert: true, new: true }
     );
 
     res.status(201).json(widget);
@@ -50,7 +47,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// DELETE /api/widgets/:id → Widget löschen
 router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
